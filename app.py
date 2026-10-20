@@ -19,13 +19,12 @@ def chat():
         data = request.get_json() or {}
         user_prompt = data.get("prompt", "Hello")
         
-        # Use the standard generative model
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        # Use the updated model string
+        model = genai.GenerativeModel("gemini-2.5-flash")
         response = model.generate_content(user_prompt)
         
         return jsonify({"reply": response.text})
     except Exception as e:
-        # Print full error details to Render logs if something fails
         print("ERROR IN CHAT:", traceback.format_exc())
         return jsonify({"error": str(e)}), 500
 
