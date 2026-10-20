@@ -1,13 +1,12 @@
 import os
 import traceback
 from flask import Flask, request, jsonify
-import google.generativeai as genai
+from google import genai
 
 app = Flask(__name__)
 
-# Configure Gemini API key from Render environment variables
-api_key = os.environ.get("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
+# Initialize the modern Gemini client
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 @app.route("/", methods=["GET"])
 def home():
@@ -19,10 +18,11 @@ def chat():
         data = request.get_json() or {}
         user_prompt = data.get("prompt", "Hello")
         
-        # Use the updated model string
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(user_prompt)
-        
+        # Use the modern client model call
+        response = client.models.generate_content(
+            model='gemini-2.5-flash',
+            contents=user_prompt,
+        )
         return jsonify({"reply": response.text})
     except Exception as e:
         print("ERROR IN CHAT:", traceback.format_exc())
