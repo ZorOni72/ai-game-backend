@@ -18,7 +18,7 @@ def chat():
         data = request.get_json() or {}
         user_prompt = data.get("prompt", "Hello")
         
-        # Use the modern client model call
+        # Call the modern Gemini model
         response = client.models.generate_content(
             model='gemini-2.5-flash',
             contents=user_prompt,
